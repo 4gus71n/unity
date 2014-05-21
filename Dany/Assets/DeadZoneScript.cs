@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DeadZoneScript : MonoBehaviour {
 	public GameObject red;
@@ -14,13 +15,26 @@ public class DeadZoneScript : MonoBehaviour {
 	void Start () {
 	
 	}
-	
+
+	public float maxTime = 0;
+	float timeHolder;
 	// Update is called once per frame
 	void Update () {
-	
+		if (main.isMenuScene) {
+			if (maxTime == 0) {
+				maxTime = Random.Range(1,3);
+			}
+			timeHolder += Time.deltaTime;
+			if (timeHolder >= maxTime) {
+				OnMouseDown();
+				timeHolder = 0;
+				maxTime = 0;
+			}
+		}
 	}
 
 	void OnMouseDown() {
+		if (main.paused) return;
 		++currentColor;
 		currentColor = (currentColor == 4) ? (1) : (currentColor);
 		switch (currentColor) {
@@ -43,7 +57,12 @@ public class DeadZoneScript : MonoBehaviour {
 			green.renderer.enabled = true;
 			break;
 		}
-		main.eraseAllSquaresIn(channel, currentColor);
+		List<RedSquare> toRemove = 
+			main.brickBag.FindAll(rs => rs.color == currentColor && rs.channelRunningIn == channel);
+		main.brickBag.RemoveAll(rs => rs.color == currentColor && rs.channelRunningIn == channel);
+		foreach (RedSquare rsq in toRemove) {
+			if (rsq.gameObject != null) DestroyImmediate(rsq.gameObject);
+		}
 	}
 		
 

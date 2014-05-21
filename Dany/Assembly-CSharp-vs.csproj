@@ -46,9 +46,12 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\ChannelHolder.cs" />
      <Compile Include="Assets\DeadZoneScript.cs" />
+     <Compile Include="Assets\ExitScript.cs" />
      <Compile Include="Assets\MainScript.cs" />
      <Compile Include="Assets\RedSquare.cs" />
+     <Compile Include="Assets\StartScript.cs" />
      <Compile Include="Assets\ValhallaScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

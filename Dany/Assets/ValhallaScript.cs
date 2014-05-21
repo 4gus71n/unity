@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ValhallaScript : MonoBehaviour {
 
+	public MainScript main;
 	// Use this for initialization
 	void Start () {
 	
@@ -14,6 +15,6 @@ public class ValhallaScript : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		Destroy (other.gameObject);
+
 	}
 }
