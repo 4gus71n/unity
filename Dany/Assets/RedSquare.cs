@@ -54,16 +54,35 @@ public class RedSquare : MonoBehaviour {
 		greenSquare.renderer.enabled = false;
 	}
 
+	void OnMouseDown() {
+		if (main.paused)
+			return;
+		switch (color) {
+		case RED_BRICK:
+			changeToBlue();
+			break;
+		case BLUE_BRICK:
+			changeToGreen();
+			break;
+		case GREEN_BRICK:
+			changeToRed();
+			break;
+		default:
+			changeToRed();
+			break;
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
+		if (main.IsPaused())
+			return;
 		if ((this.transform.position.y <= -5.539416) && !main.isMenuScene && (this.channelRunningIn != 666)) {
 			RedSquare rsq = 
 				main.brickBag.Find (rs => rs.gameObject.GetInstanceID () == gameObject.GetInstanceID());
 			if (rsq != null) {
-				main.ChangeDifficulty(rsq.channelRunningIn, false);
 				main.brickBag.Remove(rsq);
 				Destroy(rsq.gameObject);
-				Handheld.Vibrate ();
 			}
 		} else if (!main.paused) {
 						transform.position = 

@@ -13,14 +13,22 @@ public class MainScript : MonoBehaviour {
 	public DeadZoneScript pathB;
 	public DeadZoneScript pathC;
 	public GUIText score;
-	public int timeSeconds = 0;
-	public int timeMiliSeconds = 0;
+	public int timeSeconds = 30;
+	public int timeMiliSeconds = 60;
 
 	public bool paused = false;
 
 	public bool isMenuScene;
 
 	public List<RedSquare> brickBag = new List<RedSquare>();
+
+	public void SetPaused(bool b) {
+		paused = b;
+	}
+
+	public bool IsPaused() {
+		return paused;
+	}
 
 	public void TooglePause () {
 		paused = !paused;
@@ -32,7 +40,7 @@ public class MainScript : MonoBehaviour {
 	public const float DECREASE_SPEED_RATE = 0.5f;
 
 	public void GameOver() {
-		score.text = "Perdiste!: "+timeSeconds+":"+timeMiliSeconds;
+		score.text = "GameOver: "+timeSeconds+":"+timeMiliSeconds;
 		paused = true;
 	}
 
@@ -156,6 +164,8 @@ public class MainScript : MonoBehaviour {
 	SpawnStrategy[,] flow = new SpawnStrategy[3,200];
 	void Start () {
 		BuildBrickStrategy ();
+		timeSeconds = 30;
+		timeMiliSeconds = 60;
 	}
 
 	int xOffset1 = 199, xOffset2 = 199, xOffset3 = 199;
@@ -164,6 +174,22 @@ public class MainScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		milisecondCarry += Time.deltaTime;
+		if (milisecondCarry > 1f/60f) {
+			milisecondCarry = 0;
+			timeMiliSeconds--;
+		}
+		if (timeMiliSeconds <= 0) {
+			timeSeconds--;
+			timeMiliSeconds = 60;
+		}
+		if (timeSeconds <= 0) {
+			GameOver();
+		}
+
+		if (score != null) {
+			score.text = timeSeconds + ":" + timeMiliSeconds;
+		}
 		if (Input.GetKeyDown(KeyCode.Escape) && isMenuScene) 
 			Application.Quit();
 		if (Input.GetKeyDown(KeyCode.Escape) && !isMenuScene) 
@@ -171,19 +197,7 @@ public class MainScript : MonoBehaviour {
 		if (paused)
 			return;
 
-		milisecondCarry += Time.deltaTime;
-		if (milisecondCarry > 1f/60f) {
-			milisecondCarry = 0;
-			timeMiliSeconds++;
-		}
-		if (timeMiliSeconds >= 60) {
-			timeSeconds++;
-			timeMiliSeconds = 0;
-		}
 
-		if (score != null) {
-			score.text = timeSeconds + ":" + timeMiliSeconds;
-		}
 
 		if (xOffset1 == 0 || xOffset2 == 0 || xOffset3 == 0) {
 			BuildBrickStrategy();
